@@ -1,0 +1,67 @@
+services:
+  dashboard:
+    build: .
+    image: homelab-dashboard:latest
+    container_name: homelab-dashboard
+    environment:
+      # Upstream for the /router proxy (LuCI from the dashboard origin).
+      ROUTER_URL: ${ROUTER_URL:-}
+      # Router password for the ubus collector. Keep it here, not in
+      # config.yaml — config.yaml is editable from the browser.
+      OPENWRT_PASSWORD: ${OPENWRT_PASSWORD:-}
+      # Key used by the ssh collector; see the volume below.
+      SSH_KEY_PATH: /run/secrets/homelab_ssh_key
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      HEALTH_INTERVAL: ${HEALTH_INTERVAL:-30}
+    ports:
+      - "${DASHBOARD_PORT:-8080}:3000"
+    # Split-horizon DNS: the health prober resolves names from inside the
+    # container, which by default only sees Docker's embedded resolver. If
+    # your LAN has internal names (a local DNS server serving *.home.arpa, say), point this
+    # at that resolver or every internal link reports a false "down".
+    # Empty (the default) keeps Docker's own resolution.
+    dns: ${DASHBOARD_DNS:-}
+    volumes:
+      # The whole directory, not just config.yaml: Docker pins an
+      # individually bind-mounted file, which makes the editor's atomic
+      # rename fail with EBUSY. Mounting the directory also puts the
+      # timestamped backups on the host where you can get at them.
+      - ./config:/app/config:rw
+      # Read-only view of what the netmap sidecar publishes. The backend
+      # only ever reads graph.json and writes the .scan-now trigger, so
+      # the trigger needs its own writable path — hence rw on the volume
+      # but no NET_* capabilities anywhere in this service.
+      - netmap-data:/data/netmap:rw
+      # Deploy-time: point this at a key with access to the Linux hosts.
+      # Prefer a dedicated key over reusing a personal one.
+      - ${SSH_KEY_FILE:-~/.ssh/id_ed25519}:/run/secrets/homelab_ssh_key:ro
+    restart: unless-stopped
+
+  # netmap runs privileged and on the host network because arp-scan,
+  # `ip neigh` and nmap's ARP fast path all need the real LAN. It is a
+  # separate container precisely so the dashboard never inherits that.
+  netmap:
+    # Opt-in: `docker compose --profile netmap up -d`, or `make up-netmap`.
+    # The image is built separately (see make netmap-image) and must match
+    # the host's architecture, so a plain `up` must not depend on it — the
+    # dashboard renders an empty Topology tab when no graph exists.
+    profiles: ["netmap"]
+    image: ${NETMAP_IMAGE:-netmap:latest}
+    container_name: homelab-netmap
+    network_mode: host
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    environment:
+      NETMAP_TARGET: ${NETMAP_TARGET:-192.168.1.0/24}
+      NETMAP_INTERVAL: ${NETMAP_INTERVAL:-3600}
+      NETMAP_ARGS: ${NETMAP_ARGS:-}
+      RUST_LOG: ${RUST_LOG:-info}
+    volumes:
+      - netmap-data:/data:rw
+      - ./docker/netmap-loop.sh:/usr/local/bin/netmap-loop.sh:ro
+    entrypoint: ["/bin/sh", "/usr/local/bin/netmap-loop.sh"]
+    restart: unless-stopped
+
+volumes:
+  netmap-data:

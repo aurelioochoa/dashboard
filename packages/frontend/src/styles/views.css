@@ -1,0 +1,506 @@
+/* ═══════════════════════════════════════════════════════════
+   Top-bar cluster, grid toolbar / filter chips, services table,
+   topology canvas, config editor.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Top bar ─── */
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.conn-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+.conn-pill .conn-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+.conn-pill.state-connected .conn-dot {
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+.conn-pill.state-connecting .conn-dot { background: var(--amber); }
+.conn-pill.state-error .conn-dot { background: var(--red); }
+
+/* ─── Grid toolbar + type chips ─── */
+.grid-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.type-chips { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+.chip:hover { color: var(--text); border-color: var(--border-hover); }
+.chip[aria-pressed="true"] {
+  color: var(--text);
+  border-color: var(--chip-accent, var(--accent-nav));
+  background: color-mix(in srgb, var(--chip-accent, var(--accent-nav)) 16%, transparent);
+}
+.chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--chip-accent, var(--accent-nav));
+}
+.chip-count { font-family: var(--mono); opacity: 0.7; }
+
+.grid-count { font-size: 0.72rem; color: var(--muted); font-family: var(--mono); }
+
+.input-search {
+  flex: 1;
+  min-width: 12rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: var(--bg-card);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  outline: none;
+}
+.input-search:focus { border-color: var(--accent-nav); }
+.input-search::placeholder { color: var(--muted); }
+
+/* ─── Services catalog ─── */
+.services-panel { display: flex; flex-direction: column; gap: 0.75rem; }
+.services-toolbar { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+.services-kinds { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+
+.services-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--bg-card);
+  overflow-x: auto;
+}
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+.services-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-align: left;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.65rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+.services-table th:hover { color: var(--text); }
+.services-table th[aria-sort]::after { content: " ↕"; opacity: 0.4; }
+.services-table th[aria-sort="ascending"]::after { content: " ↑"; opacity: 1; }
+.services-table th[aria-sort="descending"]::after { content: " ↓"; opacity: 1; }
+
+.services-table td {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+.services-table tbody tr:last-child td { border-bottom: none; }
+.services-table tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
+.services-table .col-mono { font-family: var(--mono); }
+.services-table .col-device {
+  color: var(--accent-nav);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.services-table .col-device:hover { text-decoration: underline; }
+.services-table a { color: var(--accent-server-x86); text-decoration: none; }
+.services-table a:hover { text-decoration: underline; }
+.services-empty { padding: 1.5rem; text-align: center; color: var(--muted); }
+
+.kind-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.08rem 0.3rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.state-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+.state-dot.up { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.state-dot.down { background: var(--red); }
+.state-dot.unknown { background: var(--muted); }
+
+/* ─── Topology ─── */
+.topology-panel { display: flex; flex-direction: column; gap: 0.6rem; min-height: 0; }
+.topology-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.topology-meta { font-size: 0.72rem; color: var(--muted); font-family: var(--mono); }
+.topology-tools { display: flex; gap: 0.4rem; }
+
+.topology-canvas {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.045) 1px, transparent 0)
+    0 0 / 22px 22px,
+    var(--bg-card);
+  min-height: 26rem;
+  height: clamp(26rem, 62vh, 46rem);
+  overflow: hidden;
+  cursor: grab;
+}
+.topology-canvas.panning { cursor: grabbing; }
+.topology-canvas svg { width: 100%; height: 100%; display: block; touch-action: none; }
+
+.topo-edge { stroke: rgba(255, 255, 255, 0.16); stroke-width: 1.5; fill: none; }
+.topo-edge.dimmed { stroke: rgba(255, 255, 255, 0.05); }
+.topo-edge.highlight { stroke: var(--accent-nav); stroke-width: 2.5; }
+
+.topo-node { cursor: pointer; }
+.topo-node-box {
+  fill: var(--bg-raised);
+  stroke: var(--node-accent, var(--accent-legacy));
+  stroke-width: 1.5;
+  rx: 8;
+}
+.topo-node.known .topo-node-box { stroke-width: 2; }
+.topo-node.unknown .topo-node-box { stroke-dasharray: 4 3; }
+.topo-node:hover .topo-node-box, .topo-node:focus .topo-node-box {
+  fill: #1A2340;
+  stroke-width: 2.5;
+}
+.topo-node.dimmed { opacity: 0.32; }
+.topo-node-label {
+  fill: var(--text);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  pointer-events: none;
+}
+.topo-node-sub {
+  fill: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  pointer-events: none;
+}
+.topo-node-role {
+  fill: var(--node-accent, var(--accent-legacy));
+  font-family: var(--sans);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.topo-tier-label {
+  fill: var(--muted);
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.topology-legend {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+.topology-legend .legend-item { display: inline-flex; align-items: center; gap: 0.3rem; }
+.topology-legend .legend-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  border: 1.5px solid currentColor;
+}
+
+.topology-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  color: var(--muted);
+  padding: 2rem;
+}
+.topology-empty .placeholder-icon { font-size: 2rem; }
+
+/* ─── Config editor ─── */
+.config-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.config-head h2 { margin: 0; font-size: 1rem; }
+.config-actions { display: flex; gap: 0.4rem; }
+
+.config-editor {
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background: var(--bg-base);
+  min-height: 24rem;
+}
+.config-editor .cm-editor { height: clamp(24rem, 58vh, 44rem); }
+.config-editor .cm-editor.cm-focused { outline: none; }
+.config-editor .cm-scroller { font-family: var(--mono); font-size: 0.78rem; }
+.config-editor .cm-gutters {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  color: var(--muted);
+}
+.config-editor .cm-activeLine { background: rgba(255, 255, 255, 0.03); }
+.config-editor .cm-activeLineGutter { background: rgba(255, 255, 255, 0.05); }
+
+/* ─── Preset icon picker (Config tab) ─── */
+.config-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 17rem;
+  gap: 0.75rem;
+  align-items: start;
+}
+@media (max-width: 60rem) {
+  .config-main { grid-template-columns: minmax(0, 1fr); }
+}
+
+.icon-panel {
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  background: var(--bg-card);
+  padding: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.icon-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.icon-panel-head h3 {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.icon-filter {
+  flex: 1;
+  min-width: 0;
+  max-width: 9rem;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.45rem;
+}
+.icon-filter:focus { outline: none; border-color: var(--border-hover); }
+.icon-panel-hint {
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.icon-panel-hint code { font-size: 0.68rem; }
+
+.icon-picker {
+  overflow-y: auto;
+  max-height: clamp(18rem, 48vh, 36rem);
+  padding-right: 0.2rem;
+}
+.icon-group + .icon-group { margin-top: 0.6rem; }
+.icon-group-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.4rem, 1fr));
+  gap: 0.35rem;
+}
+.icon-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.2rem;
+  /* The SVGs paint their own rounded panel edge to edge, so the tile adds
+     only enough padding for the focus ring — anything more reads as the
+     icon floating inside a second, larger box. */
+  padding: 0.15rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: none;
+  color: var(--muted);
+  font-size: 0.62rem;
+  line-height: 1.15;
+  text-align: center;
+  cursor: pointer;
+}
+.icon-tile:hover,
+.icon-tile:focus-visible {
+  border-color: var(--border-hover);
+  color: var(--text);
+  outline: none;
+}
+.icon-tile img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 0.45rem;
+}
+.icon-tile-label {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Custom icons: an upload target shaped like a tile, plus a delete
+   affordance that only appears on hover/focus so the grid stays calm. */
+.icon-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  aspect-ratio: 1;
+  border: 1px dashed var(--border-hover);
+  border-radius: 0.5rem;
+  color: var(--muted);
+  font-size: 0.62rem;
+  text-align: center;
+  cursor: pointer;
+}
+.icon-upload:hover,
+.icon-upload:focus-visible,
+.icon-upload.is-dropping {
+  border-color: var(--accent-nav);
+  color: var(--text);
+  outline: none;
+}
+.icon-upload-plus { font-size: 1.1rem; line-height: 1; }
+
+.icon-cell { position: relative; display: flex; }
+.icon-cell > .icon-tile { flex: 1; min-width: 0; }
+.icon-delete {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  border: 1px solid var(--border-hover);
+  border-radius: 50%;
+  background: var(--bg-raised);
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+}
+.icon-cell:hover .icon-delete,
+.icon-delete:focus-visible {
+  opacity: 1;
+}
+.icon-delete:hover { color: var(--red); border-color: var(--red); }
+
+/* ─── Icon dialog (opened from a card avatar) ─── */
+.icon-dialog {
+  width: min(46rem, 92vw);
+  padding: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+  background: var(--bg-card);
+  color: var(--text);
+}
+.icon-dialog::backdrop { background: rgba(4, 8, 18, 0.66); }
+.icon-dialog-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.icon-dialog-head h3 {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+.icon-dialog-device { color: var(--text); font-family: var(--mono); }
+.icon-dialog .icon-picker { max-height: min(60vh, 30rem); }
+.icon-dialog .icon-grid {
+  grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+}
+
+/* The card avatar doubles as the button that opens that dialog. */
+.card-avatar {
+  padding: 0;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+.card-avatar:hover,
+.card-avatar:focus-visible {
+  border-color: var(--border-hover);
+  outline: none;
+}

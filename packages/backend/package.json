@@ -1,0 +1,26 @@
+{
+  "name": "@homelab/backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@fastify/static": "^7.0.4",
+    "@homelab/shared": "workspace:*",
+    "fastify": "^4.28.1",
+    "js-yaml": "^4.1.0",
+    "ssh2": "^1.16.0",
+    "undici": "^6.21.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/ssh2": "^1.15.1",
+    "tsx": "^4.19.2"
+  }
+}

@@ -1,0 +1,33 @@
+/* ═══════════════════════════════════════════════════════════
+   Scrollbar polish + responsive media query
+   ═══════════════════════════════════════════════════════════ */
+
+/* Copy feedback moved to toasts — see toast.css */
+
+/* ─── Scrollbar polish ─── */
+.sidebar::-webkit-scrollbar,
+.main-area::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track,
+.main-area::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb,
+.main-area::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover,
+.main-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 960px) {
+  .app-shell { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .bento-grid { grid-template-columns: 1fr; }
+}

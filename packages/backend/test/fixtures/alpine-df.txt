@@ -1,0 +1,6 @@
+Filesystem           1024-blocks      Used Available Capacity Mounted on
+devtmpfs                     10         0        10   0% /dev
+shm                     233504         0    233504   0% /dev/shm
+/dev/sda3             17825792    131072  16789504   1% /
+/dev/sda1               277504     21811    241293   8% /boot
+tmpfs                    46704       128     46576   0% /run

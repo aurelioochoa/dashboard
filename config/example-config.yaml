@@ -1,0 +1,234 @@
+# ─────────────────────────────────────────────────────────────
+# Homelab Dashboard — example configuration
+#
+# Copy this file to `config/config.yaml` and edit to match your
+# own setup. Only `title` and a non-empty `devices` list are
+# required; everything else is optional.
+#
+#     cp config/example-config.yaml config/config.yaml
+# ─────────────────────────────────────────────────────────────
+
+title: Homelab Dashboard
+
+# Sidebar network summary. Omit this block to hide the card.
+#
+#   subnet / gateway:  always shown (render "—" when missing).
+#   dns:               optional extra row (copyable).
+#   domain:            optional extra row (not copyable).
+#   upstream_gateway:  shown inside an "Upstream" sub-block.
+#   upstream_ssid:     shown inside the same "Upstream" sub-block.
+network:
+  subnet:           10.20.0.0/24
+  gateway:          10.20.0.1
+  dns:              10.20.0.30        # optional
+  domain:           home.arpa         # optional
+  upstream_gateway: 10.0.0.1          # optional (e.g. ISP router when repeating)
+  upstream_ssid:    ExampleNet        # optional
+
+# ─────────────────────────────────────────────────────────────
+# Devices
+# ─────────────────────────────────────────────────────────────
+# Each device renders as a card in the bento grid. Supported
+# fields per device (all optional except name + ip):
+#
+#   name:         Display name shown in the card header.
+#   role:         Free-text role (used as fallback type/label).
+#   type:         One of: router | server-x86 | server-arm | legacy
+#                 Drives the accent color of the card border.
+#                 If omitted, inferred from role.
+#   type_label:   Short uppercase badge text (e.g. ROUTER, SERVER).
+#   avatar:       Emoji shown in the 32×32 tile when no icon image.
+#   icon:         Path to an image file (served from the frontend's
+#                 public/ directory, e.g. assets/router.svg).
+#                 30 preset icons ship with the dashboard under
+#                 assets/icons/ — router, switch, nas, sbc, ups, gpu,
+#                 camera and so on. The Config tab lists them all and
+#                 writes this line for you, as does clicking a card's
+#                 avatar in the Dashboard; see the README.
+#                 e.g. icon: assets/icons/server-rack.svg
+#                 Icons uploaded from the browser live under
+#                 config/icons/ and are referenced as
+#                 icon: assets/icons/user/<file>
+#   ip:           Device IP — shown as monospace under the name.
+#   hostname:     Optional hostname (e.g. foo.lan). Rendered next to
+#                 the IP with a subtle separator. Copyable.
+#   mac:          Optional MAC address. Rendered as a small chip next
+#                 to the IP. Copyable.
+#   aliases:      Optional list of alternative hostnames. Rendered as
+#                 dashed chips below the IP line. Each is copyable.
+#   upstream_ip:  Only meaningful for routers in NAT/repeater mode —
+#                 the WAN-side IP. Rendered as a "WAN" line under the
+#                 main IP. Copyable.
+#   ssh:          Boolean; if true, a copyable SSH badge appears.
+#   os:           Short OS string — matched against OS badge classes
+#                 (openwrt / arch / armbian|debian / alpine).
+#   web:          URL rendered as a "Panel Web" action button.
+#   integration:  Legacy shorthand. "openwrt" is equivalent to
+#                 `metrics: { type: openwrt }`. Still supported.
+#
+#   metrics:      How the backend collects live metrics for this
+#                 device. Optional — when omitted it is inferred:
+#                 `ssh: true` implies SSH, `integration: openwrt`
+#                 implies ubus, and anything else is not polled.
+#
+#                 metrics:
+#                   type: ssh          # Any Linux host you can SSH into.
+#                   host: 10.0.0.5     #   defaults to `ip`
+#                   port: 22
+#                   user: root
+#                   key_path: /run/secrets/homelab_ssh_key
+#                   interval: 10       #   seconds between polls
+#
+#                 metrics:
+#                   type: openwrt      # OpenWrt 21.02+ via ubus JSON-RPC.
+#                   user: root         #   password comes from the
+#                   interval: 5        #   OPENWRT_PASSWORD env var
+#
+#                 metrics:
+#                   type: exporter     # Prometheus text format,
+#                   url: http://10.0.0.5:9100/metrics   # e.g. node_exporter
+#                   interval: 10
+#
+#                 metrics:
+#                   type: none         # Never poll this device.
+#
+#   specs:        Free-form key/value map — shown in the specs
+#                 view when the ⚙ button on the card is clicked.
+#
+#   ports:        List of bare port numbers — shown as tags.
+#   port_map:     Richer form with service + proto per port.
+#                 Prefer this over `ports`.
+#
+#   services:     List of systemd/initd service objects.
+#     - name:     Service name shown in the pill.
+#       status:   "active" | "healthy" | "running" → green dot.
+#                 Anything else → red dot.
+#
+#   docker:       List of container objects (counted in Containers
+#                 stat in sidebar). Not rendered inside the card
+#                 in the current UI.
+#
+#   links:        Additional action buttons.
+#     - label:    Button text.
+#       url:      Destination (opens in new tab).
+# ─────────────────────────────────────────────────────────────
+
+devices:
+  # Example 1 — OpenWrt router with live integration
+  - name: gateway
+    role: Router
+    type: router
+    type_label: ROUTER
+    icon: assets/icons/router.svg
+    integration: openwrt          # enables live CPU/RAM polling
+    ip: 10.20.0.1
+    hostname: gateway.home.arpa   # optional
+    upstream_ip: 10.0.0.2         # optional (WAN side when repeating)
+    ssh: true
+    os: OpenWrt 24.10
+    web: http://10.20.0.1/
+    specs:
+      Modelo: Linksys E8450
+      SoC: MediaTek MT7622
+      CPU: ARM Cortex-A53 (2C) @ 1.35 GHz
+      RAM: 512 MiB
+      Flash: 128 MiB
+    port_map:
+      - { port: 22, service: Dropbear SSH, proto: tcp }
+      - { port: 53, service: dnsmasq,      proto: udp }
+      - { port: 80, service: LuCI Web,     proto: http }
+    services:
+      - { name: dnsmasq,   status: active }
+      - { name: dropbear,  status: active }
+      - { name: firewall4, status: active }
+      - { name: uhttpd,    status: active }
+
+  # Example 2 — x86 mini PC running containers
+  - name: atlas
+    role: Server
+    type: server-x86
+    type_label: SERVER
+    icon: assets/icons/mini-pc.svg
+    ip: 10.20.0.10
+    hostname: atlas.home.arpa     # optional
+    mac: "02:00:5e:10:00:0a"      # optional
+    ssh: true
+    os: Debian 12
+    specs:
+      OS: Debian 12 (bookworm)
+      Kernel: Linux 6.1 x86_64
+      CPU: Intel N100 (4C/4T)
+      RAM: 16 GiB
+      Almacenamiento: "1 TB NVMe"
+    port_map:
+      - { port: 22,   service: sshd,     proto: tcp }
+      - { port: 443,  service: Caddy,    proto: http }
+      - { port: 8096, service: Jellyfin, proto: http }
+    services:
+      - { name: sshd,       status: active }
+      - { name: docker,     status: active }
+      - { name: containerd, status: active }
+    docker:
+      - { name: jellyfin, image: "jellyfin/jellyfin:latest", status: healthy }
+      - { name: caddy,    image: "caddy:2",                  status: healthy }
+    links:
+      - { label: Jellyfin, url: "http://10.20.0.10:8096" }
+
+  # Example 3 — x86 NAS
+  - name: vault
+    role: NAS
+    type: server-x86
+    type_label: NAS
+    icon: assets/icons/nas.svg
+    ip: 10.20.0.20
+    hostname: vault.home.arpa     # optional
+    ssh: true
+    os: Debian 12
+    specs:
+      OS: Debian 12 (bookworm)
+      CPU: Intel Pentium Gold G6400 (2C/4T)
+      RAM: 8 GiB
+      Almacenamiento: "4 × 4 TB (ZFS raidz1)"
+    port_map:
+      - { port: 22,  service: sshd,  proto: tcp }
+      - { port: 445, service: Samba, proto: tcp }
+      - { port: 2049, service: NFS,  proto: tcp }
+    services:
+      - { name: sshd,        status: active }
+      - { name: smbd,        status: active }
+      - { name: nfs-server,  status: active }
+      - { name: zfs-zed,     status: active }
+
+  # Example 4 — ARM single-board computer
+  - name: pi-node
+    role: Server
+    type: server-arm
+    type_label: SERVER
+    icon: assets/icons/sbc.svg
+    ip: 10.20.0.30
+    hostname: pi-node.home.arpa   # optional
+    mac: "02:00:5e:10:00:1e"      # optional
+    aliases:                      # optional, shown as dashed chips
+      - ha.home.arpa
+    ssh: true
+    os: Debian 12
+    specs:
+      OS: Raspberry Pi OS (Debian 12)
+      Kernel: Linux 6.6 aarch64
+      CPU: ARM Cortex-A72 (4C) @ 1.8 GHz
+      RAM: 4 GiB
+      Almacenamiento: 128 GB (SSD USB)
+    port_map:
+      - { port: 22,   service: sshd,           proto: tcp }
+      - { port: 53,   service: unbound,        proto: udp }
+      - { port: 1883, service: Mosquitto,      proto: tcp }
+      - { port: 8123, service: Home Assistant, proto: http }
+    services:
+      - { name: sshd,      status: active }
+      - { name: docker,    status: active }
+      - { name: unbound,   status: active }
+      - { name: mosquitto, status: active }
+    docker:
+      - { name: homeassistant, image: "ghcr.io/home-assistant/home-assistant:stable", status: healthy }
+    links:
+      - { label: Home Assistant, url: "http://10.20.0.30:8123" }

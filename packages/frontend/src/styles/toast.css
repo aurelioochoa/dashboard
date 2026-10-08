@@ -1,0 +1,47 @@
+/* ═══════════════════════════════════════════════════════════
+   Toasts — transient bottom-right feedback (copy, save, errors)
+   ═══════════════════════════════════════════════════════════ */
+
+.toast-stack {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  max-width: min(90vw, 22rem);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-hover);
+  background: var(--bg-raised);
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  animation: toast-in 0.18s ease-out;
+}
+.toast-success { border-left: 2px solid var(--green); }
+.toast-error   { border-left: 2px solid var(--red); }
+.toast-info    { border-left: 2px solid var(--accent-nav); }
+
+.toast-leaving { animation: toast-out 0.18s ease-in forwards; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast, .toast-leaving { animation: none; }
+}

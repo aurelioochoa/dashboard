@@ -1,0 +1,14 @@
+config/.env
+config/config.yaml
+config/deploy.mk
+# Node / pnpm
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Config backups written by PUT /api/config
+config/backups/
+
+# Icons uploaded from the browser — user data, not repo content.
+# Excluded from `make deploy` too, so a deploy never wipes them.
+config/icons/

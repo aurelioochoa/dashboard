@@ -1,0 +1,13 @@
+packages:
+  - "packages/*"
+
+# esbuild (pulled in by vite/vitest) must run its postinstall to fetch the
+# platform-native binary, otherwise builds and tests fail to start.
+#
+# ssh2/cpu-features are optional native crypto speedups, declined on purpose:
+# pure-JS is fast enough for polling a handful of hosts, and skipping them
+# keeps the runtime image free of a C toolchain (it deploys to an ARM SBC).
+allowBuilds:
+  esbuild: true
+  cpu-features: false
+  ssh2: false

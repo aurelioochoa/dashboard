@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🏠</text></svg>">
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <span class="brand-icon">🏠</span>
+          <span class="brand-text">Homelab</span>
+        </div>
+
+        <nav class="sidebar-nav" id="sidebar-nav" role="tablist" aria-label="Vistas">
+          <button class="nav-item active" type="button" data-tab="dashboard">
+            <span class="nav-dot" style="background: var(--accent-nav)"></span>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-item" type="button" data-tab="topology">
+            <span class="nav-dot" style="background: var(--accent-server-x86)"></span>
+            <span>Topology</span>
+          </button>
+          <button class="nav-item" type="button" data-tab="services">
+            <span class="nav-dot" style="background: var(--accent-server-arm)"></span>
+            <span>Servicios</span>
+          </button>
+          <button class="nav-item" type="button" data-tab="config">
+            <span class="nav-dot" style="background: var(--accent-router)"></span>
+            <span>Config</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-section">
+          <div class="eyebrow">Red local</div>
+          <div class="network-card" id="network-info"></div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="eyebrow">Resumen</div>
+          <div class="stats-grid" id="stats-grid"></div>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="top-bar">
+          <h1 class="top-bar-title" id="title">Dashboard</h1>
+          <div class="top-bar-right">
+            <button type="button" id="palette-open" class="palette-trigger" aria-label="Buscar">
+              <span class="palette-trigger-icon">⌕</span>
+              <span class="palette-trigger-text">Buscar…</span>
+              <kbd>Ctrl K</kbd>
+            </button>
+            <span class="conn-pill state-idle" id="stream-status" title="Conexión con el backend">
+              <span class="conn-dot"></span>
+            </span>
+            <div class="top-bar-clock" id="clock"></div>
+          </div>
+        </header>
+
+        <section id="dashboard-view" class="tab-view active">
+          <div class="grid-toolbar">
+            <div class="type-chips" id="type-chips"></div>
+            <div class="grid-count" id="grid-count"></div>
+          </div>
+          <div id="devices" class="bento-grid"></div>
+        </section>
+
+        <section id="topology-view" class="tab-view" hidden>
+          <div class="topology-panel">
+            <div class="topology-toolbar">
+              <div class="topology-meta" id="topology-meta">Sin escaneos todavía</div>
+              <div class="topology-tools">
+                <button type="button" id="topology-fit" class="btn btn-ghost">Ajustar</button>
+                <button type="button" id="topology-scan" class="btn btn-primary">Escanear ahora</button>
+              </div>
+            </div>
+            <div class="topology-canvas" id="topology-canvas"></div>
+            <div class="topology-legend" id="topology-legend"></div>
+          </div>
+        </section>
+
+        <section id="services-view" class="tab-view" hidden>
+          <div class="services-panel">
+            <div class="services-toolbar">
+              <input type="search" id="services-filter" class="input-search"
+                     placeholder="Filtrar servicios, puertos, contenedores…" spellcheck="false">
+              <div class="services-kinds" id="services-kinds"></div>
+            </div>
+            <div class="services-table-wrap">
+              <table class="services-table" id="services-table"></table>
+            </div>
+          </div>
+        </section>
+
+        <section id="config-view" class="tab-view" hidden>
+          <div class="config-panel">
+            <div class="config-head">
+              <h2>Configuración</h2>
+              <div class="config-actions">
+                <button type="button" id="config-reload" class="btn btn-ghost">Recargar</button>
+                <button type="button" id="config-save" class="btn btn-primary" disabled>Guardar</button>
+              </div>
+            </div>
+
+            <p class="config-hint">
+              Editá <code>config.yaml</code> directamente. Se valida contra el
+              esquema antes de guardar; el backend escribe el archivo con una
+              copia de respaldo y el dashboard se recarga solo.
+            </p>
+
+            <div class="config-main">
+              <div id="config-editor" class="config-editor" aria-label="Editor de config.yaml"></div>
+
+              <aside class="icon-panel" aria-label="Iconos predeterminados">
+                <div class="icon-panel-head">
+                  <h3>Iconos</h3>
+                  <input type="search" id="icon-filter" class="icon-filter"
+                         placeholder="Filtrar iconos…" spellcheck="false" autocomplete="off">
+                </div>
+                <p class="icon-panel-hint">
+                  Clic en un icono para escribir <code>icon:</code> en el
+                  dispositivo donde está el cursor. También se copia la ruta.
+                </p>
+                <div id="icon-picker" class="icon-picker"></div>
+              </aside>
+            </div>
+            <div id="config-status" class="conn-status state-idle">
+              <span class="conn-dot"></span>
+              <span class="conn-text">Sin cambios</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="icon-dialog" class="icon-dialog" aria-label="Elegir icono del dispositivo">
+      <div class="icon-dialog-head">
+        <h3>Icono de <span id="icon-dialog-device" class="icon-dialog-device"></span></h3>
+        <input type="search" id="icon-dialog-filter" class="icon-filter"
+               placeholder="Filtrar iconos…" spellcheck="false" autocomplete="off">
+        <button type="button" id="icon-dialog-close" class="btn btn-ghost" aria-label="Cerrar">Cerrar</button>
+      </div>
+      <div id="icon-dialog-picker" class="icon-picker"></div>
+    </dialog>
+
+    <dialog id="palette" class="palette" aria-label="Buscar en el homelab">
+      <input type="text" id="palette-input" class="palette-input" autocomplete="off"
+             spellcheck="false" placeholder="Buscar dispositivos, servicios, puertos, enlaces…">
+      <ul id="palette-results" class="palette-results" role="listbox"></ul>
+      <div class="palette-foot">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navegar</span>
+        <span><kbd>Enter</kbd> abrir</span>
+        <span><kbd>Esc</kbd> cerrar</span>
+      </div>
+    </dialog>
+
+    <dialog id="shortcuts" class="shortcuts" aria-label="Atajos de teclado">
+      <h2>Atajos</h2>
+      <dl class="shortcuts-list">
+        <dt><kbd>Ctrl</kbd><kbd>K</kbd> / <kbd>/</kbd></dt><dd>Buscar</dd>
+        <dt><kbd>1</kbd>…<kbd>4</kbd></dt><dd>Cambiar de pestaña</dd>
+        <dt><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd></dt><dd>Moverse entre tarjetas</dd>
+        <dt><kbd>s</kbd></dt><dd>Specs de la tarjeta enfocada</dd>
+        <dt><kbd>r</kbd></dt><dd>Recargar datos</dd>
+        <dt><kbd>?</kbd></dt><dd>Esta ayuda</dd>
+        <dt><kbd>Esc</kbd></dt><dd>Cerrar / limpiar filtros</dd>
+      </dl>
+      <p class="shortcuts-foot">Pulsá <kbd>Esc</kbd> para cerrar.</p>
+    </dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

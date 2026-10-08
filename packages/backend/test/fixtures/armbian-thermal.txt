@@ -1,0 +1,4 @@
+gpu-thermal=56600
+ve-thermal=55223
+cpu-thermal=58301
+ddr-thermal=56519

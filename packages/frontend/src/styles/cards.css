@@ -1,0 +1,564 @@
+/* ═══════════════════════════════════════════════════════════
+   Device card — container, body faces, specs, header, badges,
+   health bars, service pills, port tags, action buttons,
+   integration dot, LIVE pill.
+   ═══════════════════════════════════════════════════════════ */
+
+.device-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent, var(--accent-server-x86));
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+.device-card:hover {
+  border-color: var(--border-hover);
+  border-left-color: var(--accent, var(--accent-server-x86));
+}
+
+/* ─── Body (two stacked faces with crossfade) ─── */
+/* The default face sizes the body (normal flow). The specs face
+   overlays absolutely so the card height stays constant when
+   toggling, and specs content scrolls internally if taller. */
+.card-body {
+  flex: 1;
+  position: relative;
+}
+.card-face {
+  opacity: 1;
+  transition: opacity 180ms ease;
+}
+.card-face-default {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.card-face-specs {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+}
+.device-card.specs-open .card-face-default {
+  opacity: 0;
+  pointer-events: none;
+}
+.device-card.specs-open .card-face-specs {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Push action buttons to the bottom of the default face */
+.card-face-default > :last-child {
+  margin-top: auto;
+}
+
+/* ─── Specs toggle button + specs table ─── */
+.specs-toggle {
+  width: 22px;
+  height: 20px;
+  padding: 0;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  line-height: 1;
+  position: relative;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+.specs-toggle:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.07);
+  border-color: var(--border-hover);
+}
+.specs-toggle .toggle-specs { display: none; }
+.device-card.specs-open .specs-toggle .toggle-default { display: none; }
+.device-card.specs-open .specs-toggle .toggle-specs   { display: inline; }
+
+.specs-table {
+  padding: 0.25rem 0.85rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.spec-row {
+  display: grid;
+  grid-template-columns: 38% 1fr;
+  gap: 0.6rem;
+  font-size: 0.74rem;
+  padding: 0.22rem 0.1rem;
+  border-bottom: 1px dashed rgba(255,255,255,0.04);
+  line-height: 1.35;
+}
+.spec-row:last-child { border-bottom: none; }
+.spec-key {
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  align-self: center;
+}
+.spec-val {
+  font-family: var(--mono);
+  color: var(--text);
+  font-size: 0.72rem;
+  word-break: break-word;
+}
+.specs-empty {
+  padding: 1rem 0.85rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+/* ─── Integration dot + LIVE pill ─── */
+.integration-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+  background: var(--muted);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.integration-dot.idle { background: var(--muted); }
+.integration-dot.warn { background: var(--amber); box-shadow: 0 0 4px var(--amber); }
+.integration-dot.ok   { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.integration-dot.err  { background: var(--red);   box-shadow: 0 0 4px var(--red); }
+
+.live-pill {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.85rem;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--green);
+  background: rgba(74,222,128,0.1);
+  border: 1px solid rgba(74,222,128,0.25);
+  border-radius: 3px;
+  padding: 1px 4px;
+  line-height: 1.3;
+}
+
+.health-val {
+  font-family: var(--mono);
+  color: var(--text);
+  font-size: 9px;
+  font-weight: 600;
+  margin-left: 0.2rem;
+  letter-spacing: 0;
+}
+.health-dim { opacity: 0.5; }
+
+/* Section 1 — Header */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.85rem 0.85rem 0.7rem;
+}
+.card-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.5rem;
+  background: var(--avatar-bg, rgba(96,165,250,0.14));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.card-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.card-head-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.card-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.card-name {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card-id {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.card-ip {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.card-ip:hover { color: var(--text); }
+
+.card-hostname {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  position: relative;
+  padding-left: 0.55rem;
+}
+.card-hostname::before {
+  content: "·";
+  color: var(--border-hover);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.card-hostname:hover { color: var(--text); }
+
+.card-mac {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.card-mac:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+.card-wan {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.card-wan-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.card-wan-ip {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.card-wan-ip:hover { color: var(--text); }
+
+.card-aliases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.card-alias {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.card-alias:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  line-height: 1.35;
+}
+.badge.type-router     { background: rgba(245,158,11,0.14);  color: var(--accent-router); }
+.badge.type-server-x86 { background: rgba(96,165,250,0.14);  color: var(--accent-server-x86); }
+.badge.type-server-arm { background: rgba(45,212,191,0.14);  color: var(--accent-server-arm); }
+.badge.type-legacy     { background: rgba(107,122,153,0.18); color: var(--accent-legacy); }
+
+.badge.os-openwrt  { background: rgba(74,222,128,0.12);  color: var(--green); }
+.badge.os-arch     { background: rgba(96,165,250,0.14);  color: var(--blue); }
+.badge.os-armbian  { background: rgba(45,212,191,0.14);  color: var(--accent-server-arm); }
+.badge.os-alpine   { background: rgba(107,122,153,0.18); color: var(--accent-legacy); }
+.badge.os-generic  { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+.badge.ssh {
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+.badge.ssh:hover { color: var(--text); background: rgba(255,255,255,0.08); }
+
+/* Section 2 — Health bars */
+.health-row {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.25rem 0.85rem 0.7rem;
+}
+.health-item { flex: 1; min-width: 0; }
+.health-label {
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+.health-track {
+  height: 3px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.health-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1s ease;
+}
+
+/* Section 3 — Service pills */
+.service-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0 0.85rem 0.7rem;
+}
+.svc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text);
+  line-height: 1.4;
+}
+.svc-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.svc-dot.up {
+  background: var(--green);
+  box-shadow: 0 0 4px var(--green);
+}
+.svc-dot.down { background: var(--red); }
+
+/* Section 4 — Port tags */
+.port-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0 0.85rem 0.7rem;
+}
+.port-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+  line-height: 1.4;
+}
+.port-tag:hover { border-color: var(--border-hover); }
+.port-tag .port-num { color: var(--text); font-weight: 600; }
+
+/* Section 5 — Action buttons */
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0 0.85rem 0.85rem;
+  margin-top: auto;
+}
+.action-btn {
+  font-size: 10px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-hover);
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  line-height: 1.3;
+}
+.action-btn:hover {
+  color: var(--text);
+  border-color: rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.06);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Live-data additions: sparklines, extra metric bars, probe
+   dots, keyboard focus, filtered/flash states.
+   ═══════════════════════════════════════════════════════════ */
+
+/* The health row wraps now that disk/temp bars can join CPU/RAM. */
+.health-row {
+  flex-wrap: wrap;
+  align-items: flex-end;
+  position: relative;
+}
+.health-item { flex: 1 1 5.5rem; }
+
+/* Sparkline under each bar — 100×20 viewBox, stretched to the item. */
+.spark {
+  display: block;
+  width: 100%;
+  height: 14px;
+  margin-top: 2px;
+  overflow: visible;
+}
+.spark-line { fill: none; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.spark-area { stroke: none; opacity: 0.16; }
+
+.metric-extras {
+  flex: 1 1 100%;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.metric-extras:empty { display: none; }
+.metric-extras .health-item { flex: 1 1 5.5rem; }
+
+.metric-foot {
+  flex: 1 1 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  min-height: 0;
+}
+.metric-foot:empty { display: none; }
+
+/* The LIVE pill only earns its glow once data is actually flowing. */
+.live-pill { opacity: 0.35; transition: opacity 0.2s ease; }
+.health-row.is-live .live-pill { opacity: 1; }
+.health-row.is-stale .live-pill { opacity: 0.35; }
+
+.health-error {
+  flex: 1 1 100%;
+  font-size: 9px;
+  color: var(--red);
+  font-family: var(--mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Probe dots on port tags and action buttons. */
+.port-dot, .action-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: transparent;
+  margin-right: 4px;
+  vertical-align: middle;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.port-tag.probe-up .port-dot, .action-btn.probe-up .action-dot {
+  background: var(--green);
+  box-shadow: 0 0 4px var(--green);
+}
+.port-tag.probe-down .port-dot, .action-btn.probe-down .action-dot { background: var(--red); }
+.port-tag.probe-down { border-color: rgba(248, 113, 113, 0.35); }
+.action-btn.probe-down { border-color: rgba(248, 113, 113, 0.35); }
+
+/* Service pills carry a response-time hint once probed. */
+.svc-pill .svc-ms {
+  font-family: var(--mono);
+  font-size: 8px;
+  opacity: 0.6;
+  margin-left: 3px;
+}
+
+/* ─── Keyboard focus + filtering ─── */
+.device-card:focus { outline: none; }
+.device-card:focus-visible {
+  outline: 2px solid var(--accent-nav);
+  outline-offset: 2px;
+}
+.device-card[hidden] { display: none; }
+
+.badge.ssh:focus-visible,
+.specs-toggle:focus-visible,
+.action-btn:focus-visible {
+  outline: 2px solid var(--accent-nav);
+  outline-offset: 2px;
+}
+
+.card-flash { animation: card-flash 1.2s ease-out; }
+@keyframes card-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(129, 140, 248, 0.5); }
+  100% { box-shadow: 0 0 0 12px rgba(129, 140, 248, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-flash { animation: none; }
+  .health-fill { transition: none; }
+}

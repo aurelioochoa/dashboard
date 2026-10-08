@@ -1,0 +1,21 @@
+Filesystem     1024-blocks     Used Available Capacity Mounted on
+udev               1930432        0   1930432       0% /dev
+tmpfs               401676     6472    395204       2% /run
+/dev/mmcblk0p1   119700224 10514076 107937936       9% /
+tmpfs              2008364      152   2008212       1% /dev/shm
+tmpfs                 5120        0      5120       0% /run/lock
+tmpfs                 1024        0      1024       0% /run/credentials/systemd-resolved.service
+tmpfs                 1024        0      1024       0% /run/credentials/systemd-networkd.service
+tmpfs              2008364        0   2008364       0% /tmp
+/dev/loop0         8154588     2072   7716704       1% /srv/backup/snap
+/dev/zram1           47960      672     43704       2% /var/log
+tmpfs                 1024        0      1024       0% /run/credentials/systemd-journald.service
+tmpfs                 1024        0      1024       0% /run/credentials/getty@tty1.service
+tmpfs                 1024        0      1024       0% /run/credentials/serial-getty@ttyS0.service
+overlay          119700224 10514076 107937936       9% /var/lib/docker/rootfs/overlayfs/48a25977100fb6be72ddf57c4bf57eddea171a0a3277b9825606beccf397d6e2
+overlay          119700224 10514076 107937936       9% /var/lib/docker/rootfs/overlayfs/ee1cfc80e3c8372eae5efb4fd3fc44eef03301c25ec3742987f3a1e3ee2ea2ae
+overlay          119700224 10514076 107937936       9% /var/lib/docker/rootfs/overlayfs/e3bebc602a83923b7d79ba615329261a769af75d829fcbda1a5fa4f80ea222a3
+overlay          119700224 10514076 107937936       9% /var/lib/docker/rootfs/overlayfs/ead9d54e73a0e5126cb0b3eaeefec27f8afbcb0400e39e9ecc42a66fed6b97cc
+overlay          119700224 10514076 107937936       9% /var/lib/docker/rootfs/overlayfs/994dd8b111749bc35cf4b2ab1c75e6293b6c2dd7f3d0a1c60f26d7500b742b9e
+overlay          119700224 10514076 107937936       9% /var/lib/docker/rootfs/overlayfs/79c636c00a7b05b81e016f904beb84b7f1d2054f5ad9f55c19f4d924d398856e
+tmpfs               401672        4    401668       1% /run/user/0

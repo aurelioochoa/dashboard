@@ -1,0 +1,22 @@
+Unable to find image 'alpine:3.19' locally
+3.19: Pulling from library/alpine
+fd18d7b2aa35: Download complete
+ef1614f30685: Download complete
+Digest: sha256:6baf43584bcb78f2e5847d1de515f23499913ac9f12bdf834811a3145eb11ca1
+Status: Downloaded newer image for alpine:3.19
+Filesystem           1024-blocks    Used Available Capacity Mounted on
+overlay              982345180 842115684  90255432  90% /
+tmpfs                    65536         0     65536   0% /dev
+shm                      65536         0     65536   0% /dev/shm
+/dev/nvme0n1p2       982345180 842115684  90255432  90% /etc/resolv.conf
+/dev/nvme0n1p2       982345180 842115684  90255432  90% /etc/hostname
+/dev/nvme0n1p2       982345180 842115684  90255432  90% /etc/hosts
+tmpfs                        4         0         4   0% /proc/acpi
+tmpfs                        4         0         4   0% /proc/asound
+tmpfs                    65536         0     65536   0% /proc/interrupts
+tmpfs                    65536         0     65536   0% /proc/kcore
+tmpfs                    65536         0     65536   0% /proc/keys
+tmpfs                        4         0         4   0% /proc/scsi
+tmpfs                    65536         0     65536   0% /proc/timer_list
+tmpfs                        4         0         4   0% /sys/devices/virtual/powercap
+tmpfs                        4         0         4   0% /sys/firmware

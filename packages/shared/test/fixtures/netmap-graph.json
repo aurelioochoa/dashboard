@@ -1,0 +1,38 @@
+{
+  "hosts": {
+    "10.20.0.30": {
+      "ip": "10.20.0.30",
+      "mac": "02:00:5e:10:00:1e",
+      "hostname": null,
+      "vendor": null,
+      "open_ports": [],
+      "os_guess": null,
+      "role": "Unknown",
+      "detected_by": [
+        "IpNeigh"
+      ],
+      "hop_distance": null
+    },
+    "10.20.0.1": {
+      "ip": "10.20.0.1",
+      "mac": "02:00:5e:10:00:01",
+      "hostname": null,
+      "vendor": null,
+      "open_ports": [],
+      "os_guess": null,
+      "role": "Gateway",
+      "detected_by": [
+        "IpNeigh"
+      ],
+      "hop_distance": null
+    }
+  },
+  "edges": [
+    {
+      "from": "10.20.0.1",
+      "to": "10.20.0.30",
+      "hop_index": 1
+    }
+  ],
+  "gateway": "10.20.0.1"
+}

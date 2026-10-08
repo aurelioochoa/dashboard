@@ -1,0 +1,235 @@
+/* ═══════════════════════════════════════════════════════════
+   Placeholder panels, config panel, config form, inputs,
+   buttons, connection status pill.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Placeholder / Config panels ─── */
+.placeholder-panel,
+.config-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  color: var(--text);
+}
+.placeholder-panel {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 50vh;
+  justify-content: center;
+}
+.placeholder-icon { font-size: 2.5rem; }
+.placeholder-panel h2,
+.config-panel h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.placeholder-panel p { color: var(--muted); margin: 0; }
+
+.config-panel { max-width: 640px; }
+.config-section { margin-top: 1.25rem; }
+.config-section .eyebrow { padding: 0 0 0.4rem; }
+.config-info {
+  font-size: 0.85rem;
+  color: var(--text);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+}
+.config-info code {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent-server-x86);
+  background: rgba(96,165,250,0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.config-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0 0 0.9rem;
+}
+.config-hint code {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  color: var(--accent-server-x86);
+  background: rgba(96,165,250,0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ─── Config form ─── */
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 1rem;
+}
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.form-row-inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+.form-row-inline input[type="checkbox"] {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border-hover);
+  background: var(--bg-card);
+  cursor: pointer;
+  position: relative;
+  margin: 0;
+}
+.form-row-inline input[type="checkbox"]:checked {
+  background: var(--accent-nav);
+  border-color: var(--accent-nav);
+}
+.form-row-inline input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #0a0f1f;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.form-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.config-form input[type="text"],
+.config-form input[type="password"],
+.config-form input[type="number"] {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  padding: 0.45rem 0.6rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  outline: none;
+  width: 100%;
+}
+.config-form input:focus {
+  border-color: var(--accent-nav);
+  background: #121a33;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding-top: 0.25rem;
+}
+.btn {
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--border-hover);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.25);
+}
+.btn-primary {
+  background: var(--accent-nav);
+  border-color: var(--accent-nav);
+  color: #0a0f1f;
+}
+.btn-primary:hover {
+  background: #9aa3f9;
+  border-color: #9aa3f9;
+}
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--muted);
+}
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: var(--border-hover);
+  background: rgba(255,255,255,0.03);
+}
+
+/* Connection status pill */
+.conn-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  padding: 0.35rem 0.65rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+.conn-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.conn-status.state-connecting .conn-dot {
+  background: var(--amber);
+  box-shadow: 0 0 5px var(--amber);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+.conn-status.state-connected .conn-dot {
+  background: var(--green);
+  box-shadow: 0 0 5px var(--green);
+}
+.conn-status.state-error .conn-dot {
+  background: var(--red);
+  box-shadow: 0 0 5px var(--red);
+}
+.conn-status.state-connected .conn-text { color: var(--green); }
+.conn-status.state-error     .conn-text { color: var(--red); }
+.conn-err {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--red);
+  margin-left: 0.35rem;
+  max-width: 100%;
+  word-break: break-word;
+}
